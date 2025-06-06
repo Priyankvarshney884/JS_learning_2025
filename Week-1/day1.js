@@ -42,7 +42,7 @@ let cap3={
     sayHi: function(){
         console.log(this.firstName);
         // const iAmInner=function() {  it will go for window object and this.firstName will be undefined
-            const iAmInner=()=> { // it will go for the object cap3 and this.firstName will be krishna
+            const iAmInner=()=> { //    it will go for the object cap3 and this.firstName will be krishna
             console.log(this.firstName);
         }
         iAmInner();

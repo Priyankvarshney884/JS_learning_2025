@@ -187,3 +187,71 @@ console.log(jane.name, jane.age); // Output: Error or `undefined`, `undefined`
 const janeFixed = Person("Jane", 25);
 console.log(janeFixed.name, janeFixed.age); // Output: 'Jane', 25
 //++++++++++++++++++++++++++++++++++++++++++++
+// In JavaScript, accessing deeply nested properties in a large object can sometimes be tricky. If some of the intermediate properties are not present, you could easily end up with an error that breaks your code.
+
+// Consider the following objects:
+
+// const carol = {
+//   details: {
+//     personal: { firstName: "Carol", lastName: "Smith" },
+//     age: 25,
+//     city: "New York",
+//   },
+// };
+
+// const dave = {
+//   details: {
+//     age: 30,
+//     city: "San Francisco",
+//   },
+// };
+
+// function getFirstName(user) {
+//   return user.details.personal.firstName;
+// }
+// When calling getFirstName(carol), it works as expected. However, calling getFirstName(dave) will result in an error because the personal property doesn't exist in dave.details.
+
+// Problem Statement
+
+// Write a function named get that takes an object and a path to a property, and safely returns the value at that path. If the resolved value is undefined, the function should return an optional defaultValue. This function will help avoid errors when accessing deeply nested properties.
+
+// get(object, path, [defaultValue]);
+// object: The object to query.
+
+// path: The path of the property to get. It can be a string with . as the separator between fields, or an array of path strings.
+
+// defaultValue: Optional parameter. The value returned if the resolved value is undefined.
+
+// get(carol, "details.personal.firstName"); // 'Carol'
+// get(carol, "details.city"); // 'New York'
+// get(dave, "details.personal.firstName"); // undefined
+// get({ a: [{ b: { c: 42 } }] }, "a.0.b.c"); // 42
+
+function get(objectParam, pathParam, defaultValue) {
+  // TODO: Convert path to an array if it's a string
+
+  const path = Array.isArray(pathParam) ? pathParam : pathParam.split('.').filter(Boolean); // help me here to understand the logic 
+    // This line converts the path to an array if it's a string, splitting by '.' and filtering out any empty strings.
+    // If path is a string, split it by '.' and filter out any empty strings
+    // If path is already an array, it remains unchanged.
+    // This allows the function to handle both string and array inputs for the path parameter.
+    // This is done to ensure that the path can be traversed step-by-step through the object.
+    
+  // TODO: Initialize index, length, and reference to the object
+  let result = objectParam;
+
+  for(let i =0;i<path.length;i++)
+  {
+      if(result=== undefined || result === null)
+      {
+          return defaultValue;
+
+      }
+      result = result[path[i]];
+
+  }
+  // TODO: Traverse the object step-by-step
+
+  return result === undefined ? defaultValue : result;
+  // TODO: Determine the final value and return
+}
