@@ -1,0 +1,214 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Color Boxes - Toggle</title>
+</head>
+<style>
+    .box {
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+        display: inline-block;
+        cursor: pointer;
+        border: 2px solid transparent; /* Add a default border */
+        transition: border-color 0.2s ease; /* Smooth transition for border */
+    }
+
+    .box[data-option="red"] { background-color: red; }
+    .box[data-option="blue"] { background-color: blue; }
+    .box[data-option="green"] { background-color: green; }
+    .box[data-option="black"] { background-color: black; }
+
+    /* New style for the active/selected box */
+    .box.selected {
+        border-color: yellow; /* Highlight with a yellow border */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow */
+    }
+</style>
+<body>
+   <div class="container">
+     <div class="box" data-option="red"></div>
+     <div class="box" data-option="blue"></div>
+     <div class="box" data-option="green"></div>
+     <div class="box" data-option="black"></div>
+   </div>
+    <script>
+        const containerRef = document.querySelector('.container');
+
+        containerRef.addEventListener('click', function(event) {
+            const target = event.target;
+
+            if (target.classList.contains('box')) {
+                // Remove 'selected' class from all boxes first
+                const allBoxes = containerRef.querySelectorAll('.box');
+                allBoxes.forEach(box => {
+                    box.classList.remove('selected');
+                });
+
+                // Add 'selected' class to the clicked box
+                target.classList.add('selected');
+                
+                const color = target.getAttribute('data-option');
+                console.log(`Clicked ${color} box. Now selected.`);
+            }
+        });
+
+        // we have to revert the color as random color once user click on any box 
+        const boxes = document.querySelectorAll('.box');
+        boxes.forEach(box => {
+            box.addEventListener('click', function() {
+                // Generate a random color
+                const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+                // Set the background color to the random color
+                this.style.backgroundColor = randomColor;
+            });
+        });
+
+
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding-top: 5rem;
+        }
+
+        .movies {
+            height: 10rem;
+            width: 10rem;
+            margin: 2rem;
+        }
+
+        .price {
+            background-color: rgb(247 84 33);
+            height: 8rem;
+            padding: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .heading {
+            background-color: rgba(0, 0, 0, 0.856);
+            height: 2rem;
+        }
+
+        .heading,
+        .price {
+            color: white;
+            text-align: center;
+            margin: 0;
+        }
+
+       select,
+        h1 {
+            position: fixed;
+            background-color: white; /* optional, for clarity */
+            z-index: 10;
+        }
+
+        h1 {
+            top: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        select {
+            top: 3rem;
+            left: 1rem;
+            width: 8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>BOOK MY SHOW</h1>
+    <select>
+        <option value="none">None</option>
+        <option value="action">Action</option>
+        <option value="romance">Romance</option>
+        <option value="comedy">Comedy</option>
+    </select>
+
+    <div class="movies">
+        <h3 class="heading">Example-1 action</h3>
+        <p class="price" data-category="action">Rs. 100</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-2 action</h3>
+        <p class="price" data-category="action">Rs 200</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-3 action</h3>
+        <p class="price" data-category="action">Rs. 150</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-4 romance</h3>
+        <p class="price" data-category="romance">Rs 200</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-5 romance</h3>
+        <p class="price" data-category="romance">Rs. 150</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-6 romance</h3>
+        <p class="price" data-category="romance">Rs. 150</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-7 action</h3>
+        <p class="price" data-category="action">Rs 200</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-8 comedy</h3>
+        <p class="price" data-category="comedy">Rs. 100</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-9 romance</h3>
+        <p class="price" data-category="romance">Rs. 100</p>
+    </div>
+    <div class="movies">
+        <h3 class="heading">Example-10 comedy</h3>
+        <p class="price" data-category="comedy">Rs 200</p>
+    </div>
+
+</body>
+<script>
+    const selectRef = document.querySelector('select');
+    const moviesRef = document.querySelectorAll('.movies');
+
+    selectRef.addEventListener('change', function(e)
+    {
+      const selectedValue = selectRef.value;
+        moviesRef.forEach(function(movie) {
+            const priceRef = movie.querySelector('.price');
+            const category = priceRef.getAttribute('data-category');
+    
+            if (category === e.paren || e.target.value === 'none') {
+                movie.style.display = 'block';
+            } else {
+                movie.style.display = 'none';
+            }
+        });
+           
+    }
+)
+
+</script>
+</html>

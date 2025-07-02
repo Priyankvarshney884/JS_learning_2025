@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" placeholder="Type something here..." />
+    <button>Use Me</button>
+
+    <script>
+        const buttonRef = document.querySelector('button');
+
+
+        // Mouse events
+        buttonRef.addEventListener('click', function() {
+            alert('Button clicked');
+        });
+        buttonRef.addEventListener('mouseover', function() {
+            alert('Mouse over the button');
+        });
+        buttonRef.addEventListener('mouseout', function() {
+            alert('Mouse out of the button');
+        });
+        buttonRef.addEventListener('dblclick', function() {
+            alert('Button double clicked');
+        });
+        const newButtonRef = document.querySelector('button');
+        newButtonRef.addEventListener('contextmenu', function(event) {
+            event.preventDefault(); // Prevent the default context menu from appearing
+            alert('Right click on the button');
+        });
+
+
+
+        // Keyboard events
+
+        const inputRef = document.querySelector('input');
+
+        inputRef.addEventListener('keydown', function(event) {
+            console.log('Key down event:', event.key);
+        });
+        inputRef.addEventListener('keyup', function(event) {
+            console.log('Key up event:', event.key);
+        });
+        inputRef.addEventListener('keypress', function(event) {
+            console.log('Key press event:', event.key);
+        });
+        inputRef.addEventListener('blur', function(event) {
+            console.log('Input blur:', event.target.value);
+        });
+    </script>
+</body>
+</html>
