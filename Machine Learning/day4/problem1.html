@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .chat-reply
+        {
+            margin-left: 15px 30px;
+        }
+        .chat-wrapper
+        {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 5px;
+        }
+        .chat-new-reply {
+            margin: 5px 30px;
+            display: none;
+        }
+        .chat-new-reply textarea {
+            width: 100%;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-old">
+        <h1>
+            static reference
+        </h1>
+       <div class="chat-wrapper">
+        <div class="chat-message">Good Morning Everyone </div>
+        <div class="chat-action"><button>Reply</button></div>
+        <div class="chat-new-reply"><textarea>Reply here </textarea><button>add</button></div>
+        <div class="chat-reply">
+            <div class="chat-wrapper">
+                <div class="chat-message">I'm fine </div>
+                <div class="chat-action"><button>Reply</button></div>
+                <div class="chat-new-reply"><textarea>Reply here </textarea><button>add</button></div>
+
+                <div class="chat-reply">
+                     <div class="chat-wrapper">
+                        <div class="chat-message">I'm fine </div>
+                        <div class="chat-action"><button>Reply</button></div>
+                        <div class="chat-new-reply"><textarea>Reply here </textarea><button>add</button></div>
+                        <div class="chat-reply"></div>
+                    </div>
+                </div>
+            </div>
+             <div class="chat-wrapper">
+                <div class="chat-message">I'm fine </div>
+                <div class="chat-action"><button>Reply</button></div>
+                <div class="chat-new-reply"><textarea>Reply here </textarea><button>add</button></div>
+                <div class="chat-reply"></div>
+            </div>
+        </div>
+       </div>
+
+    </div>
+      <div class="container">
+        <h1>Dynamic reference </h1>
+       <!-- <div class="chat-wrapper">
+        <div class="chat-message">Good Morning Everyone </div>
+        <div class="chat-action"><button class="reply">Reply</button></div>
+        <div class="chat-new-reply"><textarea placeholder="Reply here"> </textarea><button class="add">add</button></div>
+        <div class="chat-reply">
+        </div> -->
+       </div>
+
+    </div>
+    <script>
+        function addNewReply(parentRef, msg)
+        {
+            const newChatWrapperRef = document.createElement('div');
+            newChatWrapperRef.classList.add('chat-wrapper');
+            newChatWrapperRef.innerHTML=`
+             <div class="chat-wrapper">
+                <div class="chat-message">${msg}</div>
+                <div class="chat-action"><button class="reply">Reply</button></div>
+                <div class="chat-new-reply"><textarea placeholder="Reply here"> </textarea><button class="add" >add</button></div>
+                <div class="chat-reply">
+            </div>
+            `
+
+            parentRef.appendChild(newChatWrapperRef);
+            newChatWrapperRef.querySelector('.reply').addEventListener('click' , function(event)
+            {
+                event.target.closest('.chat-wrapper').querySelector('.chat-new-reply').style.display='block';
+            });
+
+             newChatWrapperRef.querySelector('.add').addEventListener('click' , function(e)
+            {
+               const newMsg = e.target.closest('.chat-wrapper').querySelector('.chat-new-reply textarea').value;
+               e.target.closest('.chat-wrapper').querySelector('.chat-new-reply textarea').style.display='none';
+               const chatRepliesRef = newChatWrapperRef.querySelector('.chat-reply');
+
+               addNewReply(chatRepliesRef,newMsg);
+               
+            });
+        }
+        const containerRef = document.querySelector('.container')
+        addNewReply(containerRef, 'Good Morning Everyone , how are you all ');
+    </script>
+</body>
+</html>
