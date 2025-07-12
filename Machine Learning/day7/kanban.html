@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            background-color: rgb(34, 34, 200);
+            height: 60px;
+            align-items: center;
+        }
+
+        header .priorities {
+            display: flex;
+            background-color: #fbfbfb;
+            padding: 10px;
+            align-items: center;
+            column-gap: 10px;
+            margin: 0 50px;
+        }
+
+        header .priorities .priority {
+            width: 50px;
+            height: 20px;
+        }
+
+        [data-priority="p0"] {
+            background-color: pink;
+        }
+
+        [data-priority="p1"] {
+            background-color: skyblue;
+        }
+
+        [data-priority="p2"] {
+            background-color: purple;
+        }
+
+        [data-priority="p3"] {
+            background-color: aquamarine;
+        }
+
+        header .actions {
+            display: flex;
+            background-color: white;
+            color: black;
+        }
+
+        header .actions .action {
+            width: 50px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header .actions .action:hover {
+            cursor: pointer;
+            background-color: antiquewhite;
+        }
+
+        .tasks {
+            margin: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            row-gap: 15px;
+            column-gap: 15px;
+        }
+
+        .tasks .task {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .tasks .task .task-priority {
+            height: 10px;
+        }
+
+        .tasks .task .task-id {
+            height: 15px;
+            font-size: 12px;
+            background-color: black;
+            color: white;
+            padding-left: 5px;
+        }
+
+        .tasks .task .task-title {
+            display: flex;
+            flex: 1;
+            background-color: aliceblue;
+            padding: 5px;
+        }
+
+        .tasks .task .task-title textarea {
+            border: none;
+            background: transparent;
+        }
+
+        .tasks .task .task-remove {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            cursor: pointer;
+        }
+
+        .modal {
+            width: 50vw;
+            height: 300px;
+            border: 1px solid #ccc;
+            box-shadow: #ccc 2px 2px 2px;
+            position: fixed;
+            top: 200px;
+            display: flex;
+            transform: translateX(50%);
+        }
+
+        .modal .task-description {
+            display: flex;
+            flex: 1;
+        }
+
+        .modal .task-description textarea{
+            width: 100%;
+            padding: 15px;
+        }
+
+        .modal .task-priorties {
+            width: 80px;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            row-gap: 15px;
+        }
+
+        .modal .task-priorties .priority {
+            height: 40px;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .modal .task-priorties .priority.selected {
+            border: 2px solid white;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+      <div class="container">
+        <header>
+            <div class="priorities">
+                <div class="priority" data-priority="p0"></div>
+                <div class="priority" data-priority="p1"></div>
+                <div class="priority" data-priority="p2"></div>
+                <div class="priority" data-priority="p3"></div>
+            </div>
+            <div class="actions">
+                <div class="action add" onclick="toggleTaskModal()">+</div>
+                <div class="action unblock">x</div>
+            </div>
+        </header>
+        <section>
+            <div class="tasks"></div>
+        </section>
+        <div class="modal hide">
+            <div class="task-description">
+                <textarea placeholder="Enter new task title..."></textarea>
+            </div>
+            <div class="task-priorties">
+                <div class="priority selected" data-priority="p0"></div>
+                <div class="priority" data-priority="p1"></div>
+                <div class="priority" data-priority="p2"></div>
+                <div class="priority" data-priority="p3"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    
+   const tasks = [{
+                    id: 1,
+                    title: 'Task 1',
+                    priority: 'p0'
+                }, {
+                    id: 2,
+                    title: 'Task 2',
+                    priority: 'p3'
+                }, {
+                    id: 3,
+                    title: 'Task 3',
+                    priority: 'p0'
+                }, {
+                    id: 4,
+                    title: 'Task 4',
+                    priority: 'p2'
+                }, {
+                    id: 5,
+                    title: 'Task 5',
+                    priority: 'p2'
+                }, {
+                    id: 6,
+                    title: 'Task 6',
+                    priority: 'p1'
+                }, {
+                    id: 7,
+                    title: 'Task 7',
+                    priority: 'p0'
+                }, {
+                    id: 8,
+                    title: 'Task 8',
+                    priority: 'p1'
+                }, {
+                    id: 9,
+                    title: 'Task 9',
+                    priority: 'p3'
+                }];
+
+            const newTask = {
+            id: '',
+            title: '',
+            priority: 'p0' 
+        };
+        const tasksRef = document.querySelector('.tasks');
+        const priorityFilterRef = document.querySelector('.priorities');
+        const taskModalRef = document.querySelector('.modal');
+        const modalPriorityContainerRef = document.querySelector('.task-priorties');
+        const newTaskTextareaRef = document.querySelector('.modal .task-description textarea');
+
+        function createTask(task, parentRef) {
+            const { id, title, priority } = task;
+            const newTaskRef = document.createElement('div');
+            newTaskRef.classList.add('task');
+            newTaskRef.innerHTML = `
+                <div class="task-priority" data-priority="${priority}"></div>
+                <div class="task-id">${id}</div>
+                <div class="task-title"><textarea disabled>${title}</textarea></div>
+                <div class="task-remove"><i class="fa-solid fa-trash"></i></div>
+            `;
+            parentRef.appendChild(newTaskRef);
+
+            // newTaskRef.querySelector('.fa-trash').addEventListener('click', function(e) {
+            //     const taskId = e.target.closest('.task').querySelector('.task-id').innerText;
+            //     tasks = tasks.filter(task => task.id != taskId);
+            //     localStorage.setItem('tasks', JSON.stringify(tasks));
+            //     render(tasks);
+            // });
+
+        }
+        function render(tasks) {
+            tasksRef.innerHTML = '';
+            const tasksFragmentRef = document.createDocumentFragment();
+
+            tasks.forEach(task => {
+                createTask(task, tasksFragmentRef);
+            });
+
+            tasksRef.appendChild(tasksFragmentRef);
+        }
+
+        render(tasks);
+
+        function addNewTask({ title, priority}) {
+            const newTask = { 
+                id: Math.random(), 
+                title, 
+                priority, 
+            };
+
+            tasks.push(newTask);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            createTask(newTask, tasksRef);
+        }
+         priorityFilterRef.addEventListener('click', function(e) {
+            if (e.target.classList.contains('priority')) {
+                const taskPriority = e.target.getAttribute('data-priority');
+                console.log(taskPriority);
+                const filteredTasks = filterTasks(taskPriority);
+                render(filteredTasks);
+            }
+        });
+         function filterTasks(taskPriority) {
+            return tasks.filter(task => {
+                return task.priority === taskPriority;
+            });
+        }
+
+
+
+</script>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auto Suggest</title>
+  <style>
+    .container {
+      position: relative;
+      width: 300px;
+    }
+
+    .suggestion-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      z-index: 1000;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .item {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .item:hover {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+    <h1>Add the countries Name with starting letters </h1>
+  <div class="container">
+    
+    <input type="text" id="search" placeholder="Search...">
+    <div class="suggestion-list"></div>
+  </div>
+
+  <script>
+    const inputRef = document.querySelector('#search');
+    const suggestionListRef = document.querySelector('.suggestion-list');
+    const debouncedSearch = debounce(getCountriesNames, 300);
+
+    inputRef.addEventListener('input', (e) => {
+      const text = e.target.value.trim();
+      if (text.length >= 2) {
+        debouncedSearch(text);
+      } else {
+        renderSuggestions([]);
+      }
+    });
+
+    function getCountriesNames(query) {
+      fetch(`https://restcountries.com/v3.1/name/${query}`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            renderSuggestions(data);
+          } else {
+            renderSuggestions([]);
+          }
+        })
+        .catch(() => {
+          renderSuggestions([]);
+        });
+    }
+
+    function renderSuggestions(suggestions) {
+      suggestionListRef.innerHTML = '';
+      suggestionListRef.style.display = suggestions.length ? 'block' : 'none';
+
+      const fragment = document.createDocumentFragment();
+      suggestions.forEach(suggestion => {
+        const item = createNewSuggestionItem(suggestion.name.common);
+        fragment.appendChild(item);
+      });
+
+      suggestionListRef.appendChild(fragment);
+    }
+
+    function createNewSuggestionItem(name) {
+      const div = document.createElement('div');
+      div.classList.add('item');
+      div.textContent = name;
+
+      // Clicking a suggestion
+      div.addEventListener('click', () => {
+        inputRef.value = name;
+        renderSuggestions([]);
+      });
+
+      return div;
+    }
+
+    function debounce(fn, delay = 300) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn(...args);
+        }, delay);
+      };
+    }
+  </script>
+</body>
+</html>
