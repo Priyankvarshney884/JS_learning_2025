@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        display: flex;
+        gap: 10px;
+        background-color: aquamarine;
+    }
+
+    .star {
+        font-size: 50px;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .star.hover {
+        color: gold;
+        transform: scale(1.2);
+    }
+
+    .star.active {
+        color: orange;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="star" data-id="1">★</div>
+        <div class="star" data-id="2">★</div>
+        <div class="star" data-id="3">★</div>
+        <div class="star" data-id="4">★</div>
+        <div class="star" data-id="5">★</div>
+    </div>
+    <script>
+        const containerRef = document.querySelector('.container');
+
+        const toggleStarClass = (starId, className) => {
+            const stars = document.querySelectorAll('.star');
+
+            stars.forEach((star, index) => {
+                if (index < starId) {
+                    star.classList.add(className);
+                }
+                else {
+                    star.classList.remove(className);
+                }
+            });
+        }
+
+        containerRef.addEventListener('click',(event)=>{
+            if(event.target.classList.contains('star'))
+        {
+                const starId = parseInt(event.target.getAttribute('data-id'));
+                toggleStarClass(starId, 'active');
+            }
+        }
+        )
+          containerRef.addEventListener('mouseover',(event)=>{
+            if(event.target.classList.contains('star'))
+        {
+                const starId = parseInt(event.target.getAttribute('data-id'));
+                toggleStarClass(starId, 'active');
+            }
+        }
+        )
+          containerRef.addEventListener('mouseout',(event)=>{
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                star.classList.remove('hover');
+            })
+        }
+        )
+    </script>
+</body>
+
+</html>
