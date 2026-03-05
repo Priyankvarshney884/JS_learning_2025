@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Function Debugging</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Function f(x,y) Debugging</h1>
+    
+    <div id="results"></div>
+
+    <script>
+        // The function implementation
+        function f(x, y) {
+            console.log(`Called with arguments: x=${x}, y=${y}`);
+            console.log(`arguments.length: ${arguments.length}`);
+            
+            // If both arguments are provided
+            if (arguments.length === 2) {
+                console.log(`Direct call - returning ${x} * ${y} = ${x * y}`);
+                return x * y;
+            }
+            // If only one argument is provided
+            else {
+                console.log(`Currying - saving x=${x} and returning a function`);
+                const firstArg = x;
+                return function(y) {
+                    console.log(`Curried function called with y=${y}`);
+                    console.log(`Returning ${firstArg} * ${y} = ${firstArg * y}`);
+                    return firstArg * y;
+                };
+            }
+        }
+
+        // Test cases
+        function runTests() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            
+            function addTestResult(testName, expected, actual) {
+                const div = document.createElement('div');
+                div.className = 'test-case';
+                div.innerHTML = `<strong>${testName}</strong><br>
+                                  Expected: ${expected}<br>
+                                  Actual: ${actual}`;
+                
+                if (expected === actual) {
+                    div.innerHTML += '<br><span class="success">✓ PASSED</span>';
+                } else {
+                    div.innerHTML += '<br><span class="error">✗ FAILED</span>';
+                }
+                
+                resultsDiv.appendChild(div);
+            }
+
+            // Test 1: Direct call with positive numbers
+            const result1 = f(3, 4);
+            addTestResult('Direct call: f(3, 4)', 12, result1);
+
+            // Test 2: Curried call with positive numbers
+            const result2 = f(3)(4);
+            addTestResult('Curried call: f(3)(4)', 12, result2);
+
+            // Test 3: Direct call with negative numbers
+            const result3 = f(-2, 5);
+            addTestResult('Direct call: f(-2, 5)', -10, result3);
+
+            // Test 4: Curried call with negative numbers
+            const result4 = f(4)(-3);
+            addTestResult('Curried call: f(4)(-3)', -12, result4);
+
+            // Test 5: Direct call with zero
+            const result5 = f(0, 7);
+            addTestResult('Direct call: f(0, 7)', 0, result5);
+
+            // Test 6: Curried call with zero
+            const result6 = f(5)(0);
+            addTestResult('Curried call: f(5)(0)', 0, result6);
+        }
+
+        // Run tests when page loads
+        window.onload = runTests;
+    </script>
+</body>
+</html>

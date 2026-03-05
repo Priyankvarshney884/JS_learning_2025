@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <ul id="skills"></ul>
+        <ul id="hobbies"></ul>
+    </div>
+
+    <script>
+        const skillsRef = document.querySelector('#skills');
+        const hobbiesRef = document.querySelector('#hobbies');
+        const skills = ['Machine Coding', 'System Design', 'Data Structures and Algorithms'];
+        const hobbies = ['Reading', 'Writing', 'Coding'];
+
+
+        for (let i = 0; i < skills.length; i++) {
+            const liRef = document.createElement('li');
+            liRef.innerText = skills[i];
+            liRef.style.textDecoration = 'underline';
+            skillsRef.appendChild(liRef);
+        }
+
+        const newHobbiesFragmentRef = document.createDocumentFragment();
+        for (let i = 0; i < hobbies.length; i++) {
+            const liRef = document.createElement('li');
+            liRef.innerText = hobbies[i];
+            liRef.style.textDecoration = 'underline';
+            newHobbiesFragmentRef.appendChild(liRef);
+        }
+
+        hobbiesRef.appendChild(newHobbiesFragmentRef);
+
+    </script>
+</body>
+</html>
